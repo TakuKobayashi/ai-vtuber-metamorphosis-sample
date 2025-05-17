@@ -8,10 +8,21 @@ phpmyadmin
 https://uta.one/phpmyadmin/
 
 
+Token iDollar v0
+https://solscan.io/token/HBzna59igv24SnDi1hSYhefXzPJqAG7uTWqQjVtJ5gao
+
+Token                                         Balance  
+-----------------------------------------------------  
+HBzna59igv24SnDi1hSYhefXzPJqAG7uTWqQjVtJ5gao  1000000  
+
+Token iDollar v1
+https://solscan.io/token/D1Mz2efJKeiDx5qKtmgEVMkMJmNqquEJj7KKogKvpump
+
+
 # Web 側のdeploy
 
-Webの確認用としてNetlifyにdeployしております。以下のURLにアクセスして確認することができます
-https://680fc1e5d8cf92705a79c508--utaone-web.netlify.app/
+Webの確認用としてNetlifyにdeployしております。以下のURLにアクセスして確認することができます  
+https://680fc1e5d8cf92705a79c508--utaone-web.netlify.app/  
 
 ## Deploy方法の確認
 
