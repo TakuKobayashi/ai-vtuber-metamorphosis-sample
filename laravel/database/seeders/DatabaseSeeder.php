@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use App\Models\WalletUser;
+use App\Models\NFT;
+use App\Models\NFTOffer;
 class DatabaseSeeder extends Seeder
 {
     /**
