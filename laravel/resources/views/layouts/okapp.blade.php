@@ -31,11 +31,15 @@
                     <a class="nav-link" href="{{ route('recordings.index') }}">RecordList</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="https://web3.uta.one/?id={{ Auth::user()->id }}" target="_blank">TokenWallet</a>
+                     <a class="nav-link" href="/xrpl/?id={{ Auth::user()->id }}" target="_blank">XRPL NFT</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://v.uta.one/?id={{ Auth::user()->id }}" target="_blank">LookingAvatar</a>
-                </li>
+
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link" href="https://web3.uta.one/?id={{ Auth::user()->id }}" target="_blank">TokenWallet</a>--}}
+{{--                </li>--}}
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link" href="https://v.uta.one/?id={{ Auth::user()->id }}" target="_blank">LookingAvatar</a>--}}
+{{--                </li>--}}
 
             </ul>
             <ul class="navbar-nav">
