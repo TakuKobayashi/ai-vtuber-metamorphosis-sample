@@ -22,9 +22,9 @@ class GenerateVideoCommand extends Command
         $this->info("動画生成ジョブをキューに追加します...");
 
         // オプションを定義
-        $prompt = "この画像から、SF風の雰囲気を持つ動画を作成してください。";
+        $prompt = "この画像を利用し、歌ってる様子を書き出してください。。";
         $options = [
-            'duration_seconds' => 8, // 最大8秒まで
+            'duration_seconds' => 16, // 最大16秒まで
             'soundtrack_options' => [
                 'type' => 'instrumental'
             ]
