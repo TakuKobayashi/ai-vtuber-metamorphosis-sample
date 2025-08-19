@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use QwenClient;
+use Illuminate\Support\Facades\Http;
 
 class QwenController extends Controller
 {
@@ -12,65 +14,112 @@ class QwenController extends Controller
     public function index(Request $request)
     {
         // Validate request
-        $request->validate([
-            'video' => 'required|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime|max:100000',
-        ]);
+//        $request->validate([
+//            'video' => 'required|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime|max:100000',
+//        ]);
+
+        $apiKey = 'sk-d8e285858397440e8a90309d71b2b079';
+//        $baseUrl = config('qwen.api_base_url', 'https://dashscope-intl.aliyuncs.com/api/v1');
+
 
         try {
-            // Get the video file
-//            $videoFile = $request->file('video');
 
             // Read video as binary data
-            $videoData = file_get_contents("/var/www/utaone/laravel/storage/app/public/recordings/3_3_1745730186.webm");
-
+//          $videoData = file_get_contents("/var/www/utaone/laravel/storage/app/public/recordings/3_3_1745730186.webm");
+//            $videoData = file_get_contents("/var/www/utaone/laravel/storage/app/public/recordings/uta.mp4");
+            $videoUrl = "https://uta.one/storage/recordings/3_3_1745730186.webm";
+//            $videoUrl = "https://uta.one/storage/recordings/uta.mp4";
             // Encode to base64
-            $base64Video = base64_encode($videoData);
+            //           $base64Video = base64_encode($videoData);
 
             // Get file extension
-            $fileExtension = "video/webm";
+//            $mimeType = "video/webm";
+//            $mimeType = "video/mp4";
+            // 正しいエンドポイント
+//            $endpoint = 'https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation';
 
-            // Initialize QwenClient
-            $qwen = app(QwenClient::class);
+            // URLの検証
+//            $request->validate([
+//                'video_url' => 'required|url',
+//            ]);
 
-            // Create content array with video data
-            $content = [
-                [
-                    'type' => 'text',
-                    'text' => 'Analyze this video and describe its content in detail.'
-                ],
-                [
-                    'type' => 'video',
-                    'video' => [
-                        'format' => $fileExtension,
-                        'data' => $base64Video
+            // ビデオURLを取得
+//                $videoUrl = $request->input('video_url');
+
+            // 設定からAPIキーを取得
+//                $apiKey = config('qwen.api_key');
+
+            // 正しいエンドポイント
+            $endpoint = 'https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation';
+
+            // DashScope APIの正しい形式でペイロードを構築
+            $payload = [
+                'model' => 'qwen-vl-max',
+                'input' => [
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => [
+                                ['text' => 'You are a helpful assistant.']
+                            ]
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => [
+                                // 直接URLを使用
+                                ['video' => $videoUrl],
+                                ['text' => 'このビデオを分析して、その内容を詳細に説明してください。']
+                            ]
+                        ]
                     ]
                 ]
+
             ];
 
-            // Send to Qwen 2.5 LV API
-            $response = $qwen
-                ->withModel('qwen-2.5-lv')  // Use Qwen 2.5 LV model
-                ->withContent($content)     // Set custom content with video
-                ->run();
+            // 直接APIリクエストを送信
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json',
+            ])->timeout(120)->post($endpoint, $payload);
 
-            // Return the response
-            return response()->json([
-                'success' => true,
-                'analysis' => $response,
-            ]);
+            // レスポンスをログに記録（デバッグ用）
+            Log::info('API Response Status: ' . $response->status());
+            Log::info('API Response Body: ' . $response->body());
+
+            // リクエストが成功したかチェック
+            if ($response->successful()) {
+                // APIレスポンスを返す
+                return response()->json([
+                    'success' => true,
+                    'analysis' => $response->json(),
+                ]);
+            } else {
+                // エラーをログに記録
+                Log::error('API Error: ' . $response->body());
+
+                // エラーを返す
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ビデオの分析に失敗しました',
+                    'error' => $response->json(),
+                ], 500);
+            }
 
         } catch (\Exception $e) {
-            // Log the exception
-            Log::error('Qwen Video Analysis Error: ' . $e->getMessage());
+            // 例外をログに記録
+            Log::error('分析エラー: ' . $e->getMessage());
 
-            // Return error response
+            // エラーレスポンスを返す
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred during video analysis',
+                'message' => 'ビデオ分析中にエラーが発生しました',
                 'error' => $e->getMessage(),
             ], 500);
         }
+
+
     }
+
 
     /**
      * Process and analyze a video using Alibaba Qwen 2.5 LV API

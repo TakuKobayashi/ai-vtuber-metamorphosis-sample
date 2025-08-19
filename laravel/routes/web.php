@@ -4,6 +4,7 @@ use App\Http\Controllers\SongController;
 use App\Http\Controllers\PlayController;
 use App\Http\Controllers\RecordingController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WalletAuthController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,9 @@ Route::get('/', [App\Http\Controllers\TopController::class, 'index'])->name('wel
 Route::get('/list', [App\Http\Controllers\ListController::class, 'index'])->name('list');
 Route::get('/qwen', [App\Http\Controllers\QwenController::class, 'index'])->name('qwenvideo');
 
+Route::post('/api/wallet/auth', [WalletAuthController::class, 'authenticate']);
+Route::post('/api/wallet/verify', [WalletAuthController::class, 'verify']);
+Route::get('/api/wallet/nonce/{address}', [WalletAuthController::class, 'getNonce']);
 
 Route::post('/songs/save-recording', [PlayController::class, 'saveRecording'])->name('songs.saveRecording');
 

@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.6",
         "openai-php/laravel": "^0.11.0",
-        "qwen-php/qwen-php-client": "^1.0"
+        "qwen-php/qwen-php-client": "^1.0",
+        "phpseclib/phpseclib": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

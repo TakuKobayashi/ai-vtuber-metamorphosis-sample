@@ -3,8 +3,12 @@ namespace App\Http\Controllers;
 
 use App\Services\WalletAuthService;
 use App\Models\WalletUser;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+use phpseclib3\Crypt\Ed25519;
 
 class WalletAuthController extends Controller
 {
@@ -16,7 +20,33 @@ class WalletAuthController extends Controller
     }
 
     /**
-     * ナンス生成エンドポイント
+     * ウォレットアドレス用のノンス（ワンタイム）を生成
+     * @param $address
+     * @return mixed
+     */
+    public function getNonce($address)
+    {
+        // ウォレットアドレスの妥当性チェック
+        if (!$this->isValidSolanaAddress($address)) {
+            return response()->json(['error' => 'Invalid wallet address'], 400);
+        }
+
+        // ノンスを生成（5分間有効）
+        $nonce = Str::random(32);
+        $message = "Sign this message to authenticate with our application.\nNonce: {$nonce}";
+
+        Cache::put("nonce_{$address}", $nonce, 300); // 5分間キャッシュ
+
+        return response()->json([
+            'nonce' => $nonce,
+            'message' => $message
+        ]);
+    }
+
+    /**
+     * ナンス生成エンドポイント 旧ver
+     * @param Request $request
+     * @return mixed
      */
     public function generateNonce(Request $request)
     {
@@ -44,38 +74,87 @@ class WalletAuthController extends Controller
         }
     }
 
+//    /**
+//     * ウォレット認証エンドポイント
+//     */
+//    public function authenticate(Request $request)
+//    {
+//        $request->validate([
+//            'wallet_address' => 'required|string',
+//            'signature' => 'required|string',
+//            'nonce' => 'required|string'
+//        ]);
+//
+//        try {
+//            $result = $this->authService->verifySignatureAndLogin(
+//                $request->wallet_address,
+//                $request->signature,
+//                $request->nonce
+//            );
+//
+//            return response()->json([
+//                'success' => true,
+//                'user' => $result['user'],
+//                'token' => $result['token'],
+//                'message' => 'Authentication successful'
+//            ]);
+//
+//        } catch (\Exception $e) {
+//            Log::error('Authentication failed: ' . $e->getMessage());
+//            return response()->json([
+//                'success' => false,
+//                'message' => 'Authentication failed: ' . $e->getMessage()
+//            ], 401);
+//        }
+//    }
+
     /**
-     * ウォレット認証エンドポイント
+     * ウォレット署名を検証してJWTトークンを発行
      */
     public function authenticate(Request $request)
     {
         $request->validate([
-            'wallet_address' => 'required|string',
+            'publicKey' => 'required|string',
             'signature' => 'required|string',
-            'nonce' => 'required|string'
+            'message' => 'required|string'
         ]);
 
-        try {
-            $result = $this->authService->verifySignatureAndLogin(
-                $request->wallet_address,
-                $request->signature,
-                $request->nonce
-            );
+        $publicKey = $request->publicKey;
+        $signature = $request->signature;
+        $message = $request->message;
 
-            return response()->json([
-                'success' => true,
-                'user' => $result['user'],
-                'token' => $result['token'],
-                'message' => 'Authentication successful'
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Authentication failed: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Authentication failed: ' . $e->getMessage()
-            ], 401);
+        // ノンスを抽出
+        preg_match('/Nonce: ([a-zA-Z0-9]+)/', $message, $matches);
+        if (!isset($matches[1])) {
+            return response()->json(['error' => 'Invalid message format'], 400);
         }
+
+        $nonce = $matches[1];
+        $cachedNonce = Cache::get("nonce_{$publicKey}");
+
+        if (!$cachedNonce || $cachedNonce !== $nonce) {
+            return response()->json(['error' => 'Invalid or expired nonce'], 400);
+        }
+
+        // 署名を検証
+        if (!$this->verifySignature($publicKey, $signature, $message)) {
+            return response()->json(['error' => 'Invalid signature'], 401);
+        }
+
+        // ノンスを削除（一度使用したら無効）
+        Cache::forget("nonce_{$publicKey}");
+
+        // JWTトークンを生成
+        $token = $this->generateJWT($publicKey);
+
+        // セッションにウォレットアドレスを保存
+        session(['wallet_address' => $publicKey]);
+
+        return response()->json([
+            'success' => true,
+            'token' => $token,
+            'wallet_address' => $publicKey
+        ]);
     }
 
     /**
@@ -310,6 +389,144 @@ class WalletAuthController extends Controller
                 'message' => 'Failed to verify wallet: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * JWTトークンを検証
+     */
+    public function verify(Request $request)
+    {
+        $token = $request->bearerToken();
+
+        if (!$token) {
+            return response()->json(['error' => 'Token not provided'], 401);
+        }
+
+        $payload = $this->verifyJWT($token);
+
+        if (!$payload) {
+            return response()->json(['error' => 'Invalid token'], 401);
+        }
+
+        return response()->json([
+            'success' => true,
+            'wallet_address' => $payload['wallet_address']
+        ]);
+    }
+
+    /**
+     * Ed25519署名を検証
+     */
+    private function verifySignature($publicKey, $signature, $message)
+    {
+        try {
+            // Base58デコード（Solanaの標準）
+            $publicKeyBytes = $this->base58Decode($publicKey);
+            $signatureBytes = $this->base58Decode($signature);
+
+            if (strlen($publicKeyBytes) !== 32 || strlen($signatureBytes) !== 64) {
+                return false;
+            }
+
+            $key = Ed25519::loadPublicKey($publicKeyBytes);
+            return $key->verify($message, $signatureBytes);
+
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * 簡単なJWT生成
+     */
+    private function generateJWT($walletAddress)
+    {
+        $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+        $payload = json_encode([
+            'wallet_address' => $walletAddress,
+            'iat' => time(),
+            'exp' => time() + (60 * 60 * 24) // 24時間有効
+        ]);
+
+        $base64Header = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
+        $base64Payload = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
+
+        $signature = hash_hmac('sha256', $base64Header . "." . $base64Payload, env('APP_KEY'), true);
+        $base64Signature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+
+        return $base64Header . "." . $base64Payload . "." . $base64Signature;
+    }
+
+    /**
+     * JWT検証
+     */
+    private function verifyJWT($token)
+    {
+        $parts = explode('.', $token);
+        if (count($parts) !== 3) {
+            return false;
+        }
+
+        $header = base64_decode(str_replace(['-', '_'], ['+', '/'], $parts[0]));
+        $payload = base64_decode(str_replace(['-', '_'], ['+', '/'], $parts[1]));
+        $signature = base64_decode(str_replace(['-', '_'], ['+', '/'], $parts[2]));
+
+        $expectedSignature = hash_hmac('sha256', $parts[0] . "." . $parts[1], env('APP_KEY'), true);
+
+        if (!hash_equals($expectedSignature, $signature)) {
+            return false;
+        }
+
+        $payloadData = json_decode($payload, true);
+
+        // 有効期限チェック
+        if ($payloadData['exp'] < time()) {
+            return false;
+        }
+
+        return $payloadData;
+    }
+
+    /**
+     * Solanaアドレスの妥当性チェック
+     */
+    private function isValidSolanaAddress($address)
+    {
+        return strlen($address) >= 32 && strlen($address) <= 44 && ctype_alnum($address);
+    }
+
+    /**
+     * Base58デコード
+     */
+    private function base58Decode($string)
+    {
+        $alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+        $decoded = 0;
+        $multi = 1;
+        $length = strlen($string);
+
+        for ($i = $length - 1; $i >= 0; $i--) {
+            $pos = strpos($alphabet, $string[$i]);
+            if ($pos === false) {
+                throw new Exception("Invalid character in base58 string");
+            }
+            $decoded += $multi * $pos;
+            $multi *= 58;
+        }
+
+        // Convert to binary string
+        $binary = '';
+        while ($decoded > 0) {
+            $binary = chr($decoded % 256) . $binary;
+            $decoded = intval($decoded / 256);
+        }
+
+        // Handle leading zeros
+        for ($i = 0; $i < $length && $string[$i] === '1'; $i++) {
+            $binary = "\x00" . $binary;
+        }
+
+        return $binary;
     }
 
     /**
