@@ -18,7 +18,7 @@ class QwenController extends Controller
 //            'video' => 'required|file|mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime|max:100000',
 //        ]);
 
-        $apiKey = 'sk-d8e285858397440e8a90309d71b2b079';
+        $apiKey = '';
 //        $baseUrl = config('qwen.api_base_url', 'https://dashscope-intl.aliyuncs.com/api/v1');
 
 
