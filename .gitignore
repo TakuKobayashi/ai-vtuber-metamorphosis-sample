@@ -1,0 +1,15 @@
+node_modules
+dist
+coverage
+
+.env
+.env.*
+
+docker/libretranslate
+
+README.md
+README.ja.md
+
+portfolio/*.json
+portfolio/*.yml
+portfolio/*.yaml
