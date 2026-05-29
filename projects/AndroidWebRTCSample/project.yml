@@ -2,9 +2,10 @@ name: AndroidWebRTCSample
 slug: AndroidWebRTCSample
 description_ja: Android アプリで WebRTC のカメラ映像取得、SurfaceViewRenderer 表示、カメラ切り替えなどを検証するサンプルプロジェクト。
 status: incubating
-repo:
+repo: null
 tags:
   - Android
   - Kotlin
   - WebRTC
   - camera
+description: A sample project that検証s WebRTC camera video acquisition, SurfaceViewRenderer display, cameraカメラ, etc. in the Android app。

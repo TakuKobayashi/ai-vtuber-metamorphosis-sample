@@ -2,9 +2,10 @@ name: WifiP2PSample
 slug: WifiP2PSample
 description_ja: Android の Wi-Fi Direct / Wi-Fi P2P を使った端末間通信の基礎を検証するためのサンプルプロジェクト。
 status: incubating
-repo:
+repo: null
 tags:
   - Android
   - Kotlin
   - Wi-Fi Direct
   - P2P
+description: A sample project to verify the basics of inter-ter  communication using Android’s Wi-Fi Direct/Wi-Fi P2P。

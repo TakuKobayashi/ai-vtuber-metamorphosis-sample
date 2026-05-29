@@ -2,9 +2,10 @@ name: aws-lambda-cdk-hono-images
 slug: aws-lambda-cdk-hono-images
 description_ja: AWS CDK と Hono を使い、Lambda 上で画像取得や HTTP API の構成を検証する TypeScript サンプルプロジェクト。
 status: incubating
-repo:
+repo: null
 tags:
   - AWS CDK
   - AWS Lambda
   - Hono
   - TypeScript
+description: TypeScript sample project using  CD CDK and Hono to verify image acquisition and HTTP API configuration onmbda。
