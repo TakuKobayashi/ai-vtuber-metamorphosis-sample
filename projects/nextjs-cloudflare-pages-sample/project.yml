@@ -1,0 +1,10 @@
+name: nextjs-cloudflare-pages-sample
+slug: nextjs-cloudflare-pages-sample
+description_ja: Next.js で作成した静的サイトを Cloudflare Pages にデプロイする手順や構成を検証するサンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Next.js
+  - Cloudflare Pages
+  - TypeScript
+  - deployment

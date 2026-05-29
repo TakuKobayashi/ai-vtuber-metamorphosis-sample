@@ -1,0 +1,10 @@
+name: PushNotification
+slug: PushNotification
+description_ja: Android のプッシュ通知やネイティブ連携の検証を目的とした、Kotlin と C++ ネイティブコードを含む Android サンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Android
+  - Kotlin
+  - C++
+  - push-notification

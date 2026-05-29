@@ -1,0 +1,10 @@
+name: nextjs-spotify-player
+slug: nextjs-spotify-player
+description_ja: Spotify Web Playback SDK を Next.js から利用し、ブラウザ上で Spotify の再生操作を行う方法を検証するサンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Next.js
+  - Spotify
+  - Web Playback SDK
+  - TypeScript

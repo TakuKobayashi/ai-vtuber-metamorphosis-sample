@@ -1,0 +1,10 @@
+name: serverless-python-docker
+slug: serverless-python-docker
+description_ja: Serverless Framework で Python と Docker を使い、AWS Lambda 向けコンテナ実行環境を検証するサンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Serverless Framework
+  - Python
+  - Docker
+  - AWS Lambda

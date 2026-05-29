@@ -1,0 +1,10 @@
+name: AndroidScreenRecord
+slug: AndroidScreenRecord
+description_ja: Android の MediaProjection とフォアグラウンドサービスを使い、端末画面の録画処理を検証するサンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Android
+  - Kotlin
+  - MediaProjection
+  - screen-recording

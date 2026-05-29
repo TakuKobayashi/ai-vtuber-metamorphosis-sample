@@ -1,0 +1,10 @@
+name: twitter-api-v2-sample
+slug: twitter-api-v2-sample
+description_ja: Twitter API v2 SDK を Serverless Framework と Fastify から利用し、API 連携を検証する TypeScript サンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Twitter API
+  - Serverless Framework
+  - Fastify
+  - TypeScript

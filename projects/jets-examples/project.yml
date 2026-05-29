@@ -1,0 +1,10 @@
+name: jets-examples
+slug: jets-examples
+description_ja: Ruby の Jets フレームワークを使ったサーバーレスアプリケーション構成を調査するためのサンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Jets
+  - Ruby
+  - serverless
+  - AWS Lambda

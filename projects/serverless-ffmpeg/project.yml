@@ -1,0 +1,10 @@
+name: serverless-ffmpeg
+slug: serverless-ffmpeg
+description_ja: Serverless Framework と Express を使い、AWS Lambda 上で ffmpeg を利用する構成を検証する TypeScript サンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Serverless Framework
+  - AWS Lambda
+  - ffmpeg
+  - TypeScript

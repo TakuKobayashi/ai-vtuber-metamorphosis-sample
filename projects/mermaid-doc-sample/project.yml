@@ -1,0 +1,9 @@
+name: mermaid-doc-sample
+slug: mermaid-doc-sample
+description_ja: Mermaid 記法で ER 図などの技術ドキュメント用ダイアグラムを作成・表示できるか検証するサンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Mermaid
+  - documentation
+  - diagram

@@ -1,0 +1,10 @@
+name: nextjs-typescript-blog-sample
+slug: nextjs-typescript-blog-sample
+description_ja: Next.js と TypeScript で Markdown ベースのブログサイトを作成し、動的ルーティングや Markdown 変換を検証するサンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Next.js
+  - TypeScript
+  - Markdown
+  - blog

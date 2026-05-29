@@ -1,0 +1,10 @@
+name: cloudflare-hono-sample
+slug: cloudflare-hono-sample
+description_ja: Cloudflare Workers 上で Hono、KV、D1、Prisma を組み合わせた API 実装を検証するサンプルプロジェクト。
+status: incubating
+repo:
+tags:
+  - Cloudflare Workers
+  - Hono
+  - D1
+  - Prisma
