@@ -25,9 +25,9 @@ Over time, these examples become a searchable knowledge base that helps accelera
 
 ## Projects
 
-| Project           | Description | Status |
-| ----------------- | ----------- | ------ |
-| {{PROJECT_TABLE}} |             |        |
+| Project | Description | status |
+| ------- | ----------- | ------ |
+{{PROJECT_TABLE_EN}}
 
 ---
 
