@@ -39,6 +39,7 @@ Over time, these examples become a searchable knowledge base that helps accelera
 | [GodotSample](./projects/GodotSample/) | Small-scale validation samples for Godot 4 basic project configuration and 3D scene creation。 | incubating |
 | [japanese-address-research](./projects/japanese-address-research/) | A survey project that uses Japanese address data to verify address normalization and search/convert processing。 | incubating |
 | [jets-examples](./projects/jets-examples/) | A sample project to investigate serverless application configuration using Ruby's Jets framework。 | incubating |
+| [livekit-gather-app-sample](./projects/livekit-gather-app-sample/) |  | incubating |
 | [mermaid-doc-sample](./projects/mermaid-doc-sample/) | A sample project to verify whether you can create and display diagrams for documents such as ER diagrams in Mer  notation。 | incubating |
 | [MLKitSample](./projects/MLKitSample/) | Verification sample using CameraX and Google ML Kit on Android。 | incubating |
 | [mmd-parser-sample](./projects/mmd-parser-sample/) | a validation project that uses mmd-parser to load MMD's PMX model files and VMD motion files in Node.js/Serverless environments。 | incubating |
@@ -50,6 +51,7 @@ Over time, these examples become a searchable knowledge base that helps accelera
 | [nextjs-typescript-blog-sample](./projects/nextjs-typescript-blog-sample/) | Next.js and TypeScript create Markdown-based blog sites and verify dynamic routing and Markdown conversion。 | incubating |
 | [nextjs-webrtc-sample](./projects/nextjs-webrtc-sample/) | A sample project that uses WebRTC to test real-time communication between browsers。 | incubating |
 | [notion-api-examples](./projects/notion-api-examples/) | A sample project that uses the Notion API and the Notion SDK to verify how to handle Notion data from Verify and Serverless Framework。 | incubating |
+| [partykit-websocket-chat-samples](./projects/partykit-websocket-chat-samples/) |  | incubating |
 | [PushNotification](./projects/PushNotification/) | Android sample project, including Kotlin and C++ native code, intended to verify Android push notifications and native cooperation。 | incubating |
 | [python-aws-lambda](./projects/python-aws-lambda/) | A sample project that builds applications for  Python da in Python and verifies development environments including Challice and dependency management。 | incubating |
 | [python-opencv](./projects/python-opencv/) | Sample project to verify image processing and local execution environment using Python and OpenCV。 | incubating |
