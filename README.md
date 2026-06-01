@@ -1,64 +1,9 @@
-# utaone
-
-composer  
-https://github.com/qwen-php/qwen-php-client
-https://webty.jp/staffblog/production/post-5806/
-
-phpmyadmin  
-https://uta.one/phpmyadmin/
-
-
-Token iDollar v0
-https://solscan.io/token/HBzna59igv24SnDi1hSYhefXzPJqAG7uTWqQjVtJ5gao
-
-Token                                         Balance  
------------------------------------------------------  
-HBzna59igv24SnDi1hSYhefXzPJqAG7uTWqQjVtJ5gao  1000000  
-
-Token iDollar v1
-https://solscan.io/token/D1Mz2efJKeiDx5qKtmgEVMkMJmNqquEJj7KKogKvpump
+# ai-vtuber-metamorphosis
 
 
 # Web 側のdeploy
 
-Webの確認用としてNetlifyにdeployしております。以下のURLにアクセスして確認することができます  
-https://680fc1e5d8cf92705a79c508--utaone-web.netlify.app/  
 
-## Deploy方法の確認
-
-以下のコマンドを順に実行していくことでdeployすることができます
-
-### Netlifyへのログイン
-
-```
-yarn run netlify login
-```
-
-### HTMLとして吐き出す
-
-NextJSをBuildすることでHTMLとして吐き出すことができます
-
-```
-yarn run build
-```
-
-以下のコマンドでもBuildは行われます
-
-```
-yarn run netlify build
-```
-
-吐き出される先は `out/` になります
-
-### Netlifyへdeployする
-
-Netlifyにログイン済みの状態で以下のコマンドを実行することでNetlifyへとデプロイすることができます
-
-```
-yarn run netlify deploy
-```
-
-ここでdeployするディレクトリ名を聞かれますが、上記の `out/` を指定するようにしてください
 
 # 使用した素材一覧
 
@@ -70,7 +15,6 @@ yarn run netlify deploy
 ## 使用した3Dモデル
 
 * [ニコニ立体ちゃん特設サイト(アリシア・ソリッド)](https://3d.nicovideo.jp/alicia/)
-* [Trump](https://hub.vroid.com/characters/3547853295237135862/models/2042307146559450438)
 
 ## モーション
 
