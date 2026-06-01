@@ -188,7 +188,7 @@ export class ThreeScene extends React.Component {
         const { volume } = this.#_lipSync.update();
         this.emoteController?.lipSync('aa', volume);
       }
-  
+
       this.emoteController?.update(deltaTime);
       if (this.#currentAnimationMixer) {
         this.#currentAnimationMixer.update(deltaTime);
