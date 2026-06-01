@@ -7,31 +7,29 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "netlify": "netlify",
     "format": "prettier --config .prettierrc --write \"src/**/*.{ts,js,tsx,jsx}\""
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/material": "^7.0.2",
-    "@pixiv/three-vrm": "^3.4.0",
-    "@pixiv/three-vrm-animation": "^3.4.0",
-    "axios": "^1.9.0",
-    "next": "15.3.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "three": "^0.176.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.0.1",
+    "@pixiv/three-vrm": "^3.5.3",
+    "@pixiv/three-vrm-animation": "^3.5.3",
+    "axios": "^1.16.1",
+    "next": "16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "three": "^0.184.0",
     "three-orbitcontrols-ts": "^0.1.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.1",
-    "netlify-cli": "^20.1.1",
-    "prettier": "^3.5.3",
-    "typescript": "^5"
+    "@eslint/eslintrc": "^3.3.5",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^10.4.1",
+    "eslint-config-next": "16.2.6",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3"
   }
 }
