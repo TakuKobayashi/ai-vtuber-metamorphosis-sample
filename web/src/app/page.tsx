@@ -3,8 +3,7 @@
 import styles from './page.module.css';
 import { PlayCanvasScene } from './components/PlayCanvasScene';
 import { useState, createRef, useEffect } from 'react';
-import Grid from '@mui/material/Grid2';
-import { Button } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 import type { AnimationInfo } from './components/types';
 
 export default function Home() {
