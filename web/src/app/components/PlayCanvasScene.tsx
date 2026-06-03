@@ -89,6 +89,10 @@ export class PlayCanvasScene extends React.Component<Props> {
     await this.vrmScene?.updateVrmArrayBuffer(arrayBuffer);
   }
 
+  async replaceVrmArryaBuffer(arrayBuffer: ArrayBuffer): Promise<void> {
+    await this.vrmScene?.replaceVrmArrayBuffer(arrayBuffer);
+  }
+
   async updateGlbArryaBuffer(arrayBuffer: ArrayBuffer): Promise<void> {
     await this.vrmScene?.updateGlbArrayBuffer(arrayBuffer);
   }

@@ -1,4 +1,3 @@
-/* ページ全体: 上マージンなし、横幅フル */
 .page {
   display: flex;
   flex-direction: column;
@@ -8,30 +7,58 @@
 .main {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  /* canvas の下にコントロールが続く */
 }
 
 .footer {
   margin-top: auto;
 }
 
-/* コントロール行: 左右に padding だけ */
+/* VRM + アニメーション を横並びに置くラッパー */
+.controlsArea {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  padding: 20px 24px;
+  align-items: flex-start;
+}
+
+/* 各セクション（VRM / アニメーション） */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  padding: 0 24px;
+}
+
+.section:first-child {
+  padding-left: 0;
+}
+
+.sectionLabel {
+  font-weight: 600;
+  opacity: 0.7;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* プルダウン + 適用ボタン横並び */
 .controls {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 0 24px;
+  gap: 12px;
 }
 
 .select {
-  min-width: 320px;
+  min-width: 280px;
+  flex: 1;
 }
 
-/* 現在適用中のラベル */
+/* 適用中ラベル */
 .appliedLabel {
-  min-height: 1.5em;
-  padding: 0 24px;
+  min-height: 1.4em;
+  opacity: 0.75;
 }
 
 /* ドロップゾーン */
@@ -58,18 +85,18 @@
   background: rgba(144, 202, 249, 0.12);
 }
 
-@media (max-width: 600px) {
-  .controls {
+@media (max-width: 768px) {
+  .controlsArea {
     flex-direction: column;
-    align-items: stretch;
-    padding: 0 16px;
+    gap: 24px;
+    padding: 16px;
+  }
+
+  .section {
+    padding: 0;
   }
 
   .select {
     min-width: unset;
-  }
-
-  .appliedLabel {
-    padding: 0 16px;
   }
 }

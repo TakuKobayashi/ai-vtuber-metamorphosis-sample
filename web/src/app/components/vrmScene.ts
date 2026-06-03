@@ -116,6 +116,15 @@ export class VrmScene {
     return vrm;
   }
 
+  /** VRM を差し替えて EmoteController も再生成する */
+  async replaceVrmArrayBuffer(arrayBuffer: ArrayBuffer): Promise<VRM> {
+    const vrm = await this.updateVrmArrayBuffer(arrayBuffer);
+    if (this.threeCamera) {
+      this.emoteController = new EmoteController(vrm, this.threeCamera);
+    }
+    return vrm;
+  }
+
   async updateVrmUrl(url: string): Promise<VRM> {
     const loader = new GLTFLoader();
     loader.register((parser) => new VRMLoaderPlugin(parser));

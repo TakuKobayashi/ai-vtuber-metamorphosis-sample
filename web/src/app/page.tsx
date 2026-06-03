@@ -6,6 +6,7 @@ import { useState, createRef, useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   InputLabel,
   MenuItem,
@@ -17,175 +18,255 @@ import {
   DialogActions,
 } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material';
-import type { AnimationInfo } from './components/types';
+import type { AnimationInfo, VrmInfo } from './components/types';
 
-// ローカルファイル由来のエントリは objectUrl を持つ
+// ローカルファイル追加用の sentinel 値
+const FILE_UPLOAD_VALUE = '__file_upload__';
+
+// ローカルファイル由来は objectUrl を持つ
 interface AnimationEntry extends AnimationInfo {
   objectUrl?: string;
 }
+interface VrmEntry extends VrmInfo {
+  objectUrl?: string;
+}
 
-const FILE_UPLOAD_VALUE = '__file_upload__';
+// ファイル追加ダイアログ（vrm / vrma 共通）
+interface UploadDialogProps {
+  open: boolean;
+  title: string;
+  accept: string;
+  hint: string;
+  onClose: () => void;
+  onFile: (file: File) => void;
+}
+function UploadDialog({ open, title, accept, hint, onClose, onFile }: UploadDialogProps) {
+  const [dragging, setDragging] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) onFile(file);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) onFile(file);
+    e.target.value = '';
+  };
+
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+        <Box
+          className={`${styles.dropZone} ${dragging ? styles.dropZoneDragging : ''}`}
+          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+          onClick={() => inputRef.current?.click()}
+        >
+          <Typography variant="body2" color="text.secondary" align="center">
+            ここにドラッグ＆ドロップ
+            <br />
+            またはクリックしてファイルを選択
+          </Typography>
+          <Typography variant="caption" color="text.disabled" align="center" sx={{ display: 'block', mt: 1 }}>
+            {hint}
+          </Typography>
+        </Box>
+        <input ref={inputRef} type="file" accept={accept} style={{ display: 'none' }} onChange={handleChange} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>キャンセル</Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 export default function Home() {
   const playCanvasSceneRef = createRef<PlayCanvasScene>();
   const playCanvasScene = <PlayCanvasScene ref={playCanvasSceneRef} />;
 
+  // ── アニメーション state ──
   const [animations, setAnimations] = useState<AnimationEntry[]>([]);
-  const [selectedValue, setSelectedValue] = useState<string>('');
-  const [appliedName, setAppliedName] = useState<string>('');
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dragging, setDragging] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedAnim, setSelectedAnim] = useState<string>('');
+  const [appliedAnimName, setAppliedAnimName] = useState<string>('');
+  const [animDialogOpen, setAnimDialogOpen] = useState(false);
 
-  // 初回: models-info.json からアニメーション一覧を取得
+  // ── VRM state ──
+  const [vrms, setVrms] = useState<VrmEntry[]>([]);
+  const [selectedVrm, setSelectedVrm] = useState<string>('');
+  const [appliedVrmName, setAppliedVrmName] = useState<string>('');
+  const [vrmDialogOpen, setVrmDialogOpen] = useState(false);
+
+  // 初回: models-info.json からアニメーション・VRM 一覧を取得
   useEffect(() => {
     (async () => {
       const res = await fetch('/threedmodels/models-info.json');
       const data = await res.json();
-      setAnimations(data.animations as AnimationEntry[]);
-      if ((data.animations as AnimationEntry[]).length > 0) {
-        setSelectedValue(data.animations[0].name);
+
+      const anims = data.animations as AnimationEntry[];
+      setAnimations(anims);
+      if (anims.length > 0) {
+        setSelectedAnim(anims[0].name);
+        setAppliedAnimName(anims[0].displayName);
+      }
+
+      const vrmList = data.vrms as VrmEntry[];
+      setVrms(vrmList);
+      if (vrmList.length > 0) {
+        setSelectedVrm(vrmList[0].name);
+        setAppliedVrmName(vrmList[0].name);
       }
     })();
   }, []);
 
-  // プルダウン変更
-  const onSelectChange = (e: SelectChangeEvent<string>) => {
-    const val = e.target.value;
-    if (val === FILE_UPLOAD_VALUE) {
-      setDialogOpen(true);
-      return;
-    }
-    setSelectedValue(val);
+  // ── アニメーション操作 ──
+  const onAnimSelectChange = (e: SelectChangeEvent<string>) => {
+    if (e.target.value === FILE_UPLOAD_VALUE) { setAnimDialogOpen(true); return; }
+    setSelectedAnim(e.target.value);
   };
 
-  // アニメーション適用
-  const onApply = async () => {
-    const entry = animations.find((a) => a.name === selectedValue);
+  const onApplyAnim = async () => {
+    const entry = animations.find((a) => a.name === selectedAnim);
     if (!entry) return;
-
-    let buf: ArrayBuffer;
-    if (entry.objectUrl) {
-      const res = await fetch(entry.objectUrl);
-      buf = await res.arrayBuffer();
-    } else {
-      const res = await fetch(entry.path);
-      buf = await res.arrayBuffer();
-    }
+    const res = await fetch(entry.objectUrl ?? entry.path);
+    const buf = await res.arrayBuffer();
     await playCanvasSceneRef?.current?.updateVrmAnimationArryaBuffer(buf);
-    setAppliedName(entry.displayName);
+    setAppliedAnimName(entry.displayName);
   };
 
-  // vrma ファイルを追加してプルダウンに反映
-  const addVrmaFile = useCallback(
-    (file: File) => {
-      if (!file.name.endsWith('.vrma')) return;
-      const objectUrl = URL.createObjectURL(file);
-      const displayName = file.name.replace(/\.vrma$/, '');
-      const newEntry: AnimationEntry = {
-        name: displayName,
-        displayName,
-        path: '',
-        objectUrl,
-      };
-      setAnimations((prev) => [...prev, newEntry]);
-      setSelectedValue(displayName);
-      setDialogOpen(false);
-    },
-    [],
-  );
+  const addVrmaFile = useCallback((file: File) => {
+    if (!file.name.endsWith('.vrma')) return;
+    const objectUrl = URL.createObjectURL(file);
+    const displayName = file.name.replace(/\.vrma$/, '');
+    setAnimations((prev) => [...prev, { name: displayName, displayName, path: '', objectUrl }]);
+    setSelectedAnim(displayName);
+    setAnimDialogOpen(false);
+  }, []);
 
-  // ファイル input から選択
-  const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) addVrmaFile(file);
-    e.target.value = '';
+  // ── VRM 操作 ──
+  const onVrmSelectChange = (e: SelectChangeEvent<string>) => {
+    if (e.target.value === FILE_UPLOAD_VALUE) { setVrmDialogOpen(true); return; }
+    setSelectedVrm(e.target.value);
   };
 
-  // ダイアログ内ドロップ
-  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) addVrmaFile(file);
+  const onApplyVrm = async () => {
+    const entry = vrms.find((v) => v.name === selectedVrm);
+    if (!entry) return;
+    const res = await fetch(entry.objectUrl ?? entry.path);
+    const buf = await res.arrayBuffer();
+    await playCanvasSceneRef?.current?.replaceVrmArryaBuffer(buf);
+    setAppliedVrmName(entry.name);
   };
 
-  const selectedEntry = animations.find((a) => a.name === selectedValue);
+  const addVrmFile = useCallback((file: File) => {
+    if (!file.name.endsWith('.vrm')) return;
+    const objectUrl = URL.createObjectURL(file);
+    const name = file.name.replace(/\.vrm$/, '');
+    setVrms((prev) => [...prev, { name, path: '', objectUrl }]);
+    setSelectedVrm(name);
+    setVrmDialogOpen(false);
+  }, []);
 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         {playCanvasScene}
 
-        {/* コントロールエリア */}
-        <Box className={styles.controls}>
-          {/* プルダウン */}
-          <FormControl size="small" className={styles.select}>
-            <InputLabel id="anim-select-label">アニメーション</InputLabel>
-            <Select
-              labelId="anim-select-label"
-              value={selectedValue}
-              label="アニメーション"
-              onChange={onSelectChange}
-            >
-              {animations.map((anim) => (
-                <MenuItem key={anim.name} value={anim.name}>
-                  {anim.displayName}
-                </MenuItem>
-              ))}
-              <MenuItem value={FILE_UPLOAD_VALUE} divider>
-                <em>＋ ファイルを追加...</em>
-              </MenuItem>
-            </Select>
-          </FormControl>
+        <Box className={styles.controlsArea}>
 
-          {/* 適用ボタン */}
-          <Button variant="contained" onClick={onApply} disabled={!selectedValue}>
-            適用
-          </Button>
+          {/* ── VRM セクション ── */}
+          <Box className={styles.section}>
+            <Typography variant="subtitle2" className={styles.sectionLabel}>
+              キャラクター (VRM)
+            </Typography>
+            <Box className={styles.controls}>
+              <FormControl size="small" className={styles.select}>
+                <InputLabel id="vrm-select-label">VRM</InputLabel>
+                <Select
+                  labelId="vrm-select-label"
+                  value={selectedVrm}
+                  label="VRM"
+                  onChange={onVrmSelectChange}
+                >
+                  {vrms.map((v) => (
+                    <MenuItem key={v.name} value={v.name}>{v.name}</MenuItem>
+                  ))}
+                  <MenuItem value={FILE_UPLOAD_VALUE} divider>
+                    <em>＋ ファイルを追加...</em>
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <Button variant="contained" onClick={onApplyVrm} disabled={!selectedVrm}>
+                適用
+              </Button>
+            </Box>
+            <Typography variant="body2" className={styles.appliedLabel}>
+              {appliedVrmName ? `表示中: ${appliedVrmName}` : ''}
+            </Typography>
+          </Box>
+
+          <Divider orientation="vertical" flexItem />
+
+          {/* ── アニメーション セクション ── */}
+          <Box className={styles.section}>
+            <Typography variant="subtitle2" className={styles.sectionLabel}>
+              アニメーション (VRMA)
+            </Typography>
+            <Box className={styles.controls}>
+              <FormControl size="small" className={styles.select}>
+                <InputLabel id="anim-select-label">アニメーション</InputLabel>
+                <Select
+                  labelId="anim-select-label"
+                  value={selectedAnim}
+                  label="アニメーション"
+                  onChange={onAnimSelectChange}
+                >
+                  {animations.map((a) => (
+                    <MenuItem key={a.name} value={a.name}>{a.displayName}</MenuItem>
+                  ))}
+                  <MenuItem value={FILE_UPLOAD_VALUE} divider>
+                    <em>＋ ファイルを追加...</em>
+                  </MenuItem>
+                </Select>
+              </FormControl>
+              <Button variant="contained" onClick={onApplyAnim} disabled={!selectedAnim}>
+                適用
+              </Button>
+            </Box>
+            <Typography variant="body2" className={styles.appliedLabel}>
+              {appliedAnimName ? `再生中: ${appliedAnimName}` : ''}
+            </Typography>
+          </Box>
+
         </Box>
-
-        {/* 現在適用中のアニメーション表示 */}
-        <Typography variant="body2" className={styles.appliedLabel}>
-          {appliedName ? `再生中: ${appliedName}` : ''}
-        </Typography>
       </main>
 
       <footer className={styles.footer} />
 
-      {/* vrma ファイル追加ダイアログ */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>vrma ファイルを追加</DialogTitle>
-        <DialogContent>
-          {/* ドロップゾーン */}
-          <Box
-            className={`${styles.dropZone} ${dragging ? styles.dropZoneDragging : ''}`}
-            onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={onDrop}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Typography variant="body2" color="text.secondary" align="center">
-              ここにドラッグ＆ドロップ
-              <br />
-              またはクリックしてファイルを選択
-            </Typography>
-            <Typography variant="caption" color="text.disabled" align="center" sx={{ display: "block", mt: 1 }}>
-              .vrma ファイルのみ対応
-            </Typography>
-          </Box>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".vrma"
-            style={{ display: 'none' }}
-            onChange={onFileInputChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>キャンセル</Button>
-        </DialogActions>
-      </Dialog>
+      {/* VRM 追加ダイアログ */}
+      <UploadDialog
+        open={vrmDialogOpen}
+        title="VRM ファイルを追加"
+        accept=".vrm"
+        hint=".vrm ファイルのみ対応"
+        onClose={() => setVrmDialogOpen(false)}
+        onFile={addVrmFile}
+      />
+
+      {/* VRMA 追加ダイアログ */}
+      <UploadDialog
+        open={animDialogOpen}
+        title="VRMA ファイルを追加"
+        accept=".vrma"
+        hint=".vrma ファイルのみ対応"
+        onClose={() => setAnimDialogOpen(false)}
+        onFile={addVrmaFile}
+      />
     </div>
   );
 }
