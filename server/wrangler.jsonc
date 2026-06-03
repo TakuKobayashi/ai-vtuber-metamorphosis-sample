@@ -2,10 +2,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "ai-vtuber-metamorphosis",
   "main": "src/index.ts",
-  "compatibility_date": "2026-06-03"
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
+  "compatibility_date": "2026-06-03",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "../web/out"
+  }
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },
