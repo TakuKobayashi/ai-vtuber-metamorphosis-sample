@@ -1,8 +1,9 @@
+packages:
+  - 'web'
+  - 'server'
 allowBuilds:
-  '@parcel/watcher': false
   canvas: false
   esbuild: false
-  netlify-cli: false
   sharp: false
-  unix-dgram: false
   unrs-resolver: false
+  workerd: false

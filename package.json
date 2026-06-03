@@ -1,0 +1,16 @@
+{
+  "name": "ai-vtuber-metamorphosis-server-root",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "web",
+    "server"
+  ],
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:server": "pnpm --filter server dev",
+    "build:web": "pnpm --filter web build",
+    "deploy:cloudflare": "pnpm build:web && pnpm --filter server deploy:cloudflare",
+    "lint": "pnpm --filter web lint"
+  }
+}
