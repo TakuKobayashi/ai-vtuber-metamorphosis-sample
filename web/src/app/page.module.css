@@ -11,14 +11,52 @@
 .main {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
   grid-row-start: 2;
 }
 
 .footer {
   grid-row-start: 3;
+}
+
+/* プルダウン + 適用ボタンを横並び */
+.controls {
   display: flex;
-  gap: 24px;
+  align-items: center;
+  gap: 16px;
+}
+
+.select {
+  min-width: 320px;
+}
+
+/* 現在適用中のラベル */
+.appliedLabel {
+  min-height: 1.5em;
+}
+
+/* ドロップゾーン */
+.dropZone {
+  border: 2px dashed rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 40px 24px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+  margin-top: 8px;
+}
+
+.dropZone:hover {
+  border-color: #1976d2;
+  background: rgba(25, 118, 210, 0.04);
+}
+
+.dropZoneDragging {
+  border-color: #1976d2;
+  background: rgba(25, 118, 210, 0.08);
 }
 
 @media (max-width: 600px) {
@@ -28,6 +66,15 @@
   }
 
   .main {
-    align-items: center;
+    align-items: stretch;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .select {
+    min-width: unset;
   }
 }
