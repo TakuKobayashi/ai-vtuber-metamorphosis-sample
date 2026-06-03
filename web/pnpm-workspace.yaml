@@ -1,5 +1,6 @@
 allowBuilds:
   '@parcel/watcher': false
+  canvas: false
   esbuild: false
   netlify-cli: false
   sharp: false

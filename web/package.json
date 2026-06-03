@@ -1,13 +1,13 @@
 {
-  "name": "utaone",
+  "name": "playcanvas-vrm",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --config .prettierrc --write \"src/**/*.{ts,js,tsx,jsx}\""
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -15,21 +15,17 @@
     "@mui/material": "^9.0.1",
     "@pixiv/three-vrm": "^3.5.3",
     "@pixiv/three-vrm-animation": "^3.5.3",
-    "axios": "^1.16.1",
-    "next": "16.2.6",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "three": "^0.184.0",
-    "three-orbitcontrols-ts": "^0.1.2"
+    "next": "^16.2.7",
+    "playcanvas": "^2.19.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "three": "^0.184.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.5",
     "@types/node": "^25.9.1",
-    "@types/react": "^19.2.15",
+    "@types/react": "^19.2.16",
     "@types/react-dom": "^19.2.3",
-    "eslint": "^10.4.1",
-    "eslint-config-next": "16.2.6",
-    "prettier": "^3.8.3",
+    "@types/three": "^0.184.1",
     "typescript": "^6.0.3"
   }
 }

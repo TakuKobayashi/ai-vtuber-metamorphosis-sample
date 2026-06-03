@@ -1,7 +1,8 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  // PlayCanvas は CommonJS ビルドを持つため transpilePackages で ESM 変換
+  transpilePackages: ['playcanvas'],
 };
 
 export default nextConfig;

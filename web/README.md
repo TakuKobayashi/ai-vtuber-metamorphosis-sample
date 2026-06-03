@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PlayCanvas VRM Viewer
 
-## Getting Started
+VRM キャラクターに VRMA アニメーションをランタイムで差し替えられるビューアです。
 
-First, run the development server:
+**フレームワーク構成:**
+- **Next.js (App Router)** — UI / ページ構成
+- **React + MUI** — アニメーション切り替えボタン等の UI コンポーネント
+- **PlayCanvas Engine** — メインループ管理・スクリプトコンポーネントシステム
+- **Three.js + @pixiv/three-vrm** — VRM / VRMA のロード・レンダリング
+
+## 機能
+
+- VRM キャラクターの表示
+- VRMA アニメーションのランタイム差し替え（ボタンで切り替え）
+- ランダムステージ (GLB) の読み込み
+- 自動瞬き / カメラ視線追従 / リップシンク対応
+- OrbitControls によるカメラ操作（ドラッグ・ズーム）
+
+## ローカル開発
+
+### 必要環境
+
+- Node.js 18 以上
+- pnpm
+
+### セットアップ
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 開発サーバー起動
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`http://localhost:3000` をブラウザで開いてください。
 
-## Learn More
+### ビルド
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm run build
+pnpm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 型チェック
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm run typecheck
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## プロジェクト構成
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+playcanvas-vrm/
+├── next.config.ts
+├── tsconfig.json
+├── package.json
+├── public/
+│   └── threedmodels/
+│       ├── models-info.json       ← VRM / VRMA / Stage の一覧定義
+│       ├── vrms/                  ← VRM キャラクターモデル
+│       ├── vrmas/                 ← VRMA アニメーションファイル
+│       └── stages/                ← GLB ステージモデル
+└── src/
+    └── app/
+        ├── layout.tsx
+        ├── page.tsx               ← メインページ（MUI Grid + Button でアニメーション切り替えUI）
+        ├── globals.css
+        ├── page.module.css
+        └── components/
+            ├── PlayCanvasScene.tsx      ← PlayCanvas + Three.js をラップした React クラスコンポーネント
+            ├── vrmScene.ts              ← VRM / VRMA / GLB のロード・アニメーション管理
+            ├── types.ts                 ← models-info.json の型定義
+            ├── emoteController/
+            │   ├── emoteController.ts
+            │   ├── expressionController.ts
+            │   ├── autoBlink.ts
+            │   └── autoLookAt.ts
+            └── lipSync/
+                └── lipSync.ts
+```
+
+## アーキテクチャ
+
+```
+Next.js Page (page.tsx)
+  └─ <PlayCanvasScene ref={...} />        ← React クラスコンポーネント
+       ├─ PlayCanvas Application           ← メインループ管理
+       │    └─ app.on('update', dt => vrmScene.update(dt))
+       └─ VrmScene                         ← Three.js + @pixiv/three-vrm
+            ├─ THREE.WebGLRenderer (canvas を div に append)
+            ├─ VRMLoaderPlugin             ← VRM 読み込み
+            ├─ VRMAnimationLoaderPlugin    ← VRMA 読み込み・差し替え
+            └─ EmoteController
+                 ├─ ExpressionController
+                 ├─ AutoBlink
+                 └─ AutoLookAt
+```
+
+### なぜ PlayCanvas + Three.js のハイブリッド構成か
+
+`@pixiv/three-vrm` は Three.js の `Object3D` を直接操作するため、PlayCanvas ネイティブのシーングラフへの完全移植は困難です。そのため:
+
+- **PlayCanvas** → アプリのライフサイクル・メインループ管理
+- **Three.js** → VRM / VRMA のレンダリング（PlayCanvas canvas に重ねた canvas で描画）
+
+という役割分担にしています。
+
+## models-info.json の構成
+
+```json
+{
+  "stages": [
+    { "name": "ステージ名", "pathes": ["/threedmodels/stages/xxx.glb"] }
+  ],
+  "vrms": [
+    { "name": "キャラクター名", "path": "/threedmodels/vrms/xxx.vrm" }
+  ],
+  "animations": [
+    {
+      "name": "内部名",
+      "displayName": "ボタン表示名",
+      "path": "/threedmodels/vrmas/xxx/xxx.vrma"
+    }
+  ]
+}
+```
+
+新しい VRM・VRMA・ステージを追加する場合はこの JSON にエントリを追加してください。
+
+## PlayCanvas Editor での利用
+
+PlayCanvas Editor で編集可能にする場合は、`VrmScene` クラス (`src/app/components/vrmScene.ts`) を
+`pc.createScript` 形式に変換してアップロードしてください。詳細は各ファイルのコメントを参照。

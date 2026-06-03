@@ -1,42 +1,44 @@
 'use client';
 
-import axios from 'axios';
 import styles from './page.module.css';
-import { AudioRecorder } from './components/audio-recorder';
-import { ThreeScene } from './components/three-scene';
+import { PlayCanvasScene } from './components/PlayCanvasScene';
 import { useState, createRef, useEffect } from 'react';
-import { Grid, Button } from '@mui/material';
-
-interface AnimationInfo {
-  name: string;
-  displayName: string;
-  path: string;
-}
+import Grid from '@mui/material/Grid2';
+import { Button } from '@mui/material';
+import type { AnimationInfo } from './components/types';
 
 export default function Home() {
-  const threeSceneRef = createRef<ThreeScene>();
-  const threeScene = <ThreeScene ref={threeSceneRef} />;
+  const playCanvasSceneRef = createRef<PlayCanvasScene>();
+  const playCanvasScene = <PlayCanvasScene ref={playCanvasSceneRef} />;
   const [animationInfos, setAnimationInfos] = useState<AnimationInfo[]>([]);
+
   useEffect(() => {
     (async () => {
-      const animationListResponse = await axios.get('/threedmodels/models-info.json');
-      setAnimationInfos(animationListResponse.data.animations);
+      const res = await fetch('/threedmodels/models-info.json');
+      const data = await res.json();
+      setAnimationInfos(data.animations);
     })();
   }, []);
 
   const onChangeAnimation = async (animationInfo: AnimationInfo) => {
-    const vrmaDataAnimationResponse = await axios.get(animationInfo.path, { responseType: 'arraybuffer' });
-    threeSceneRef?.current?.updateVrmAnimationArryaBuffer(vrmaDataAnimationResponse.data);
+    const res = await fetch(animationInfo.path);
+    const buf = await res.arrayBuffer();
+    playCanvasSceneRef?.current?.updateVrmAnimationArryaBuffer(buf);
   };
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        {threeScene}
+        {playCanvasScene}
         <h3>押したボタンのモーションに切り替わります</h3>
         <Grid container spacing={2}>
           {animationInfos.map((animationInfo, index) => (
             <Grid key={index} size={2}>
-              <Button variant="contained" style={{ textAlign: 'center' }} onClick={(e) => onChangeAnimation(animationInfo)}>
+              <Button
+                variant="contained"
+                style={{ textAlign: 'center' }}
+                onClick={() => onChangeAnimation(animationInfo)}
+              >
                 {animationInfo.displayName}
               </Button>
             </Grid>
