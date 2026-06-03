@@ -1,0 +1,38 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Deploy to Cloudflare Workers
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Build web
+        working-directory: web
+        run: pnpm run build
+
+      - name: Deploy (server + web assets)
+        working-directory: server
+        env:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm run deploy:cloudflare

@@ -1,22 +1,25 @@
 # ai-vtuber-metamorphosis
 
+このプロジェクトはVRMにVRMAファイルのモーションをそれぞれ適用、切替させることができるプロジェクトです
 
-# Web 側のdeploy
+## デモサイト
 
+デモサイトはこちらを参照してください
 
+https://ai-vtuber-metamorphosis.taptappun.workers.dev/
 
-# 使用した素材一覧
+## 使用した素材一覧
 
-## 背景の3Dモデル
+### 背景の3Dモデル
 
 * [サイバーステージ](https://booth.pm/ja/items/3964661)
 * [宮殿のようなステージ vr](https://booth.pm/ja/items/3278442)
 
-## 使用した3Dモデル
+### 使用した3Dモデル
 
 * [ニコニ立体ちゃん特設サイト(アリシア・ソリッド)](https://3d.nicovideo.jp/alicia/)
 
-## モーション
+### モーション
 
 * [TikTok_ダンスモーション37_『刀ピークリスマスのテーマソング2023』](https://maronvtuber.booth.pm/items/5381212)
 * [TikTok_ダンスモーション38_『デビルじゃないもん』](https://maronvtuber.booth.pm/items/5388478)
