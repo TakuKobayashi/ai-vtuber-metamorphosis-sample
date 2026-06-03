@@ -10,7 +10,7 @@ interface Props {}
  * PlayCanvasScene
  *
  * 元の ThreeScene (three-scene.jsx) を PlayCanvas + Three.js に置き換えたコンポーネント。
- * - canvas の見た目・サイズ（90vw × 40vw）は元のまま維持
+ * - canvas の見た目・サイズ横幅 100vw × 高さ 56.25vw (16:9)
  * - PlayCanvas Application をメインループとして使い、その update に
  *   Three.js + @pixiv/three-vrm の描画を接続する
  * - VrmScene クラスのメソッド（updateVrmAnimationArrayBuffer など）を
@@ -99,7 +99,7 @@ export class PlayCanvasScene extends React.Component<Props> {
 
   render() {
     return (
-      <div style={{ position: 'relative', width: '90vw', height: '40vw' }}>
+      <div style={{ position: 'relative', width: '100vw', height: '56.25vw' }}>
         {/*
          * PlayCanvas が使う canvas。
          * Three.js の WebGLRenderer canvas は VrmScene 内で動的に生成され

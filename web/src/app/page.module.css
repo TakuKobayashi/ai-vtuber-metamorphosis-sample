@@ -1,29 +1,27 @@
+/* ページ全体: 上マージンなし、横幅フル */
 .page {
-  display: grid;
-  grid-template-rows: 20px 1fr 20px;
-  align-items: center;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
   min-height: 100svh;
-  padding: 80px;
-  gap: 64px;
 }
 
 .main {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  grid-row-start: 2;
+  /* canvas の下にコントロールが続く */
 }
 
 .footer {
-  grid-row-start: 3;
+  margin-top: auto;
 }
 
-/* プルダウン + 適用ボタンを横並び */
+/* コントロール行: 左右に padding だけ */
 .controls {
   display: flex;
   align-items: center;
   gap: 16px;
+  padding: 0 24px;
 }
 
 .select {
@@ -33,11 +31,12 @@
 /* 現在適用中のラベル */
 .appliedLabel {
   min-height: 1.5em;
+  padding: 0 24px;
 }
 
 /* ドロップゾーン */
 .dropZone {
-  border: 2px dashed rgba(0, 0, 0, 0.25);
+  border: 2px dashed rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   padding: 40px 24px;
   cursor: pointer;
@@ -50,31 +49,27 @@
 }
 
 .dropZone:hover {
-  border-color: #1976d2;
-  background: rgba(25, 118, 210, 0.04);
+  border-color: #90caf9;
+  background: rgba(144, 202, 249, 0.06);
 }
 
 .dropZoneDragging {
-  border-color: #1976d2;
-  background: rgba(25, 118, 210, 0.08);
+  border-color: #90caf9;
+  background: rgba(144, 202, 249, 0.12);
 }
 
 @media (max-width: 600px) {
-  .page {
-    padding: 32px;
-    padding-bottom: 80px;
-  }
-
-  .main {
-    align-items: stretch;
-  }
-
   .controls {
     flex-direction: column;
     align-items: stretch;
+    padding: 0 16px;
   }
 
   .select {
     min-width: unset;
+  }
+
+  .appliedLabel {
+    padding: 0 16px;
   }
 }
