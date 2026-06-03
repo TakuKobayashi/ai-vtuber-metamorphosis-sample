@@ -63,7 +63,10 @@ function UploadDialog({ open, title, accept, hint, onClose, onFile }: UploadDial
       <DialogContent>
         <Box
           className={`${styles.dropZone} ${dragging ? styles.dropZoneDragging : ''}`}
-          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
           onDragLeave={() => setDragging(false)}
           onDrop={handleDrop}
           onClick={() => inputRef.current?.click()}
@@ -126,7 +129,10 @@ export default function Home() {
 
   // ── アニメーション操作 ──
   const onAnimSelectChange = (e: SelectChangeEvent<string>) => {
-    if (e.target.value === FILE_UPLOAD_VALUE) { setAnimDialogOpen(true); return; }
+    if (e.target.value === FILE_UPLOAD_VALUE) {
+      setAnimDialogOpen(true);
+      return;
+    }
     setSelectedAnim(e.target.value);
   };
 
@@ -150,7 +156,10 @@ export default function Home() {
 
   // ── VRM 操作 ──
   const onVrmSelectChange = (e: SelectChangeEvent<string>) => {
-    if (e.target.value === FILE_UPLOAD_VALUE) { setVrmDialogOpen(true); return; }
+    if (e.target.value === FILE_UPLOAD_VALUE) {
+      setVrmDialogOpen(true);
+      return;
+    }
     setSelectedVrm(e.target.value);
   };
 
@@ -178,7 +187,6 @@ export default function Home() {
         {playCanvasScene}
 
         <Box className={styles.controlsArea}>
-
           {/* ── VRM セクション ── */}
           <Box className={styles.section}>
             <Typography variant="subtitle2" className={styles.sectionLabel}>
@@ -187,14 +195,11 @@ export default function Home() {
             <Box className={styles.controls}>
               <FormControl size="small" className={styles.select}>
                 <InputLabel id="vrm-select-label">VRM</InputLabel>
-                <Select
-                  labelId="vrm-select-label"
-                  value={selectedVrm}
-                  label="VRM"
-                  onChange={onVrmSelectChange}
-                >
+                <Select labelId="vrm-select-label" value={selectedVrm} label="VRM" onChange={onVrmSelectChange}>
                   {vrms.map((v) => (
-                    <MenuItem key={v.name} value={v.name}>{v.name}</MenuItem>
+                    <MenuItem key={v.name} value={v.name}>
+                      {v.name}
+                    </MenuItem>
                   ))}
                   <MenuItem value={FILE_UPLOAD_VALUE} divider>
                     <em>＋ ファイルを追加...</em>
@@ -220,14 +225,11 @@ export default function Home() {
             <Box className={styles.controls}>
               <FormControl size="small" className={styles.select}>
                 <InputLabel id="anim-select-label">アニメーション</InputLabel>
-                <Select
-                  labelId="anim-select-label"
-                  value={selectedAnim}
-                  label="アニメーション"
-                  onChange={onAnimSelectChange}
-                >
+                <Select labelId="anim-select-label" value={selectedAnim} label="アニメーション" onChange={onAnimSelectChange}>
                   {animations.map((a) => (
-                    <MenuItem key={a.name} value={a.name}>{a.displayName}</MenuItem>
+                    <MenuItem key={a.name} value={a.name}>
+                      {a.displayName}
+                    </MenuItem>
                   ))}
                   <MenuItem value={FILE_UPLOAD_VALUE} divider>
                     <em>＋ ファイルを追加...</em>
@@ -242,7 +244,6 @@ export default function Home() {
               {appliedAnimName ? `再生中: ${appliedAnimName}` : ''}
             </Typography>
           </Box>
-
         </Box>
       </main>
 

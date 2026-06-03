@@ -25,10 +25,7 @@ import type { AnimationInfo, ModelsInfo } from './types.js';
 // UI ヘルパー
 // -------------------------------------------------------
 
-function buildAnimationButtons(
-  animations: AnimationInfo[],
-  onSelect: (anim: AnimationInfo) => Promise<void>,
-): void {
+function buildAnimationButtons(animations: AnimationInfo[], onSelect: (anim: AnimationInfo) => Promise<void>): void {
   const container = document.getElementById('animation-buttons');
   if (!container) return;
   container.innerHTML = '';
@@ -77,11 +74,7 @@ export class VrmSceneScript {
   private readonly cameraPosY: number;
   private readonly cameraPosZ: number;
 
-  constructor(
-    _app: pc.AppBase,
-    canvas: HTMLCanvasElement,
-    options: VrmSceneOptions = {},
-  ) {
+  constructor(_app: pc.AppBase, canvas: HTMLCanvasElement, options: VrmSceneOptions = {}) {
     this.modelsInfoUrl = options.modelsInfoUrl ?? '/threedmodels/models-info.json';
     this.cameraFov = options.cameraFov ?? 50;
     this.cameraPosY = options.cameraPosY ?? 1.5;
@@ -195,9 +188,7 @@ export class VrmSceneScript {
     const loader = new GLTFLoader();
     loader.register((parser) => new VRMAnimationLoaderPlugin(parser));
     const gltf = await loader.parseAsync(arrayBuffer, '');
-    const vrmAnimations = gltf.userData.vrmAnimations as Parameters<
-      typeof createVRMAnimationClip
-    >[0][];
+    const vrmAnimations = gltf.userData.vrmAnimations as Parameters<typeof createVRMAnimationClip>[0][];
 
     if (this.currentVrm && this.currentAnimationMixer && vrmAnimations) {
       this.currentAnimationMixer.stopAllAction();
@@ -296,8 +287,8 @@ export function registerAsPlayCanvasScript(pcLib: typeof import('playcanvas')): 
     default: '/threedmodels/models-info.json',
     title: 'Models Info JSON URL',
   });
-  VrmScenePC.attributes.add('cameraFov',  { type: 'number', default: 50,   title: 'Camera FOV' });
-  VrmScenePC.attributes.add('cameraPosY', { type: 'number', default: 1.5,  title: 'Camera Y' });
+  VrmScenePC.attributes.add('cameraFov', { type: 'number', default: 50, title: 'Camera FOV' });
+  VrmScenePC.attributes.add('cameraPosY', { type: 'number', default: 1.5, title: 'Camera Y' });
   VrmScenePC.attributes.add('cameraPosZ', { type: 'number', default: -2.5, title: 'Camera Z' });
 
   // PlayCanvas の ScriptType prototype に動的にメソッドを追加するため unknown 経由でキャスト
@@ -312,9 +303,7 @@ export function registerAsPlayCanvasScript(pcLib: typeof import('playcanvas')): 
     update(dt: number): void;
   };
 
-  (VrmScenePC.prototype as unknown as VrmPCInstance).initialize = function (
-    this: VrmPCInstance,
-  ) {
+  (VrmScenePC.prototype as unknown as VrmPCInstance).initialize = function (this: VrmPCInstance) {
     const canvas = this.app.graphicsDevice.canvas as HTMLCanvasElement;
     this._impl = new VrmSceneScript(this.app, canvas, {
       modelsInfoUrl: this.modelsInfoUrl,
@@ -325,10 +314,7 @@ export function registerAsPlayCanvasScript(pcLib: typeof import('playcanvas')): 
     void this._impl.loadInitAssets();
   };
 
-  (VrmScenePC.prototype as unknown as VrmPCInstance).update = function (
-    this: VrmPCInstance,
-    dt: number,
-  ) {
+  (VrmScenePC.prototype as unknown as VrmPCInstance).update = function (this: VrmPCInstance, dt: number) {
     this._impl?.update(dt);
   };
 }

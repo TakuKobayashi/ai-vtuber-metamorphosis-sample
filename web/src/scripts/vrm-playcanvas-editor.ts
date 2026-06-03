@@ -107,8 +107,14 @@ import type { AnimationInfo, ModelsInfo } from './types.js';
     }
 
     update(delta: number): void {
-      if (this.remainingTime > 0) { this.remainingTime -= delta; return; }
-      if (this.isOpen && this.isAutoBlink) { this.close(); return; }
+      if (this.remainingTime > 0) {
+        this.remainingTime -= delta;
+        return;
+      }
+      if (this.isOpen && this.isAutoBlink) {
+        this.close();
+        return;
+      }
       this.open();
     }
 
@@ -177,7 +183,9 @@ import type { AnimationInfo, ModelsInfo } from './types.js';
       }
       const t = this.autoBlink?.setEnable(false) ?? 0;
       this.currentEmotion = preset;
-      setTimeout(() => { this.expressionManager?.setValue(preset, 1); }, t * 1000);
+      setTimeout(() => {
+        this.expressionManager?.setValue(preset, 1);
+      }, t * 1000);
     }
 
     lipSync(preset: string, value: number): void {
@@ -190,9 +198,7 @@ import type { AnimationInfo, ModelsInfo } from './types.js';
     update(delta: number): void {
       this.autoBlink?.update(delta);
       if (this.currentLipSync) {
-        const weight = this.currentEmotion === 'neutral'
-          ? this.currentLipSync.value * 0.5
-          : this.currentLipSync.value * 0.25;
+        const weight = this.currentEmotion === 'neutral' ? this.currentLipSync.value * 0.5 : this.currentLipSync.value * 0.25;
         this.expressionManager?.setValue(this.currentLipSync.preset, weight);
       }
     }
@@ -209,19 +215,22 @@ import type { AnimationInfo, ModelsInfo } from './types.js';
       this.expressionController = new ExpressionController(vrm, threeCamera);
     }
 
-    playEmotion(preset: string): void { this.expressionController.playEmotion(preset); }
-    lipSync(preset: string, value: number): void { this.expressionController.lipSync(preset, value); }
-    update(delta: number): void { this.expressionController.update(delta); }
+    playEmotion(preset: string): void {
+      this.expressionController.playEmotion(preset);
+    }
+    lipSync(preset: string, value: number): void {
+      this.expressionController.lipSync(preset, value);
+    }
+    update(delta: number): void {
+      this.expressionController.update(delta);
+    }
   }
 
   // ===========================================================
   // UI ヘルパー
   // ===========================================================
 
-  function buildAnimationButtons(
-    animations: AnimationInfo[],
-    onSelect: (anim: AnimationInfo) => Promise<void>,
-  ): void {
+  function buildAnimationButtons(animations: AnimationInfo[], onSelect: (anim: AnimationInfo) => Promise<void>): void {
     const container = document.getElementById('animation-buttons');
     if (!container) return;
     container.innerHTML = '';
@@ -283,8 +292,8 @@ import type { AnimationInfo, ModelsInfo } from './types.js';
     title: 'Models Info JSON URL',
     description: 'VRM/VRMA/Stage 情報の JSON ファイルパス',
   });
-  VrmScenePC.attributes.add('cameraFov',  { type: 'number', default: 50,   title: 'Camera FOV' });
-  VrmScenePC.attributes.add('cameraPosY', { type: 'number', default: 1.5,  title: 'Camera Position Y' });
+  VrmScenePC.attributes.add('cameraFov', { type: 'number', default: 50, title: 'Camera FOV' });
+  VrmScenePC.attributes.add('cameraPosY', { type: 'number', default: 1.5, title: 'Camera Position Y' });
   VrmScenePC.attributes.add('cameraPosZ', { type: 'number', default: -2.5, title: 'Camera Position Z' });
 
   const proto = VrmScenePC.prototype as unknown as VrmPCInstance;
@@ -427,16 +436,11 @@ import type { AnimationInfo, ModelsInfo } from './types.js';
     this._threeScene?.add(gltf.scene);
   };
 
-  proto.updateVrmAnimationArrayBuffer = async function (
-    this: VrmPCInstance,
-    arrayBuffer: ArrayBuffer,
-  ) {
+  proto.updateVrmAnimationArrayBuffer = async function (this: VrmPCInstance, arrayBuffer: ArrayBuffer) {
     const loader = new GLTFLoader();
     loader.register((p) => new VRMAnimationLoaderPlugin(p));
     const gltf = await loader.parseAsync(arrayBuffer, '');
-    const vrmAnimations = gltf.userData.vrmAnimations as Parameters<
-      typeof createVRMAnimationClip
-    >[0][];
+    const vrmAnimations = gltf.userData.vrmAnimations as Parameters<typeof createVRMAnimationClip>[0][];
 
     if (this._currentVrm && this._currentAnimationMixer && vrmAnimations) {
       this._currentAnimationMixer.stopAllAction();
@@ -450,11 +454,7 @@ import type { AnimationInfo, ModelsInfo } from './types.js';
     }
   };
 
-  proto.speakVrm = async function (
-    this: VrmPCInstance,
-    buffer: ArrayBuffer,
-    expression: string,
-  ) {
+  proto.speakVrm = async function (this: VrmPCInstance, buffer: ArrayBuffer, expression: string) {
     this.emoteController?.playEmotion(expression);
     await new Promise<void>((resolve) => {
       this._lipSync?.playFromArrayBuffer(buffer, () => resolve());

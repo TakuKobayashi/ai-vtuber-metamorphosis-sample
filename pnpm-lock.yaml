@@ -72,6 +72,9 @@ importers:
       '@types/three':
         specifier: ^0.184.1
         version: 0.184.1
+      prettier:
+        specifier: ^3.8.3
+        version: 3.8.3
       typescript:
         specifier: ^6.0.3
         version: 6.0.3

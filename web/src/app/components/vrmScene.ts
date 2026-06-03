@@ -150,9 +150,7 @@ export class VrmScene {
     const loader = new GLTFLoader();
     loader.register((parser) => new VRMAnimationLoaderPlugin(parser));
     const gltf = await loader.parseAsync(arrayBuffer, '');
-    const vrmAnimations = gltf.userData.vrmAnimations as Parameters<
-      typeof createVRMAnimationClip
-    >[0][];
+    const vrmAnimations = gltf.userData.vrmAnimations as Parameters<typeof createVRMAnimationClip>[0][];
 
     if (this.currentVrm && this.currentAnimationMixer && vrmAnimations) {
       this.currentAnimationMixer.stopAllAction();
@@ -184,8 +182,7 @@ export class VrmScene {
     const h = wrapper.clientHeight;
 
     const threeCanvas = document.createElement('canvas');
-    threeCanvas.style.cssText =
-      'position:absolute;top:0;left:0;width:100%;height:100%;display:block;';
+    threeCanvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;display:block;';
     wrapper.appendChild(threeCanvas);
 
     const renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, antialias: true });

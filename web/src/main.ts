@@ -73,8 +73,7 @@ vrmScene.loadInitAssets().catch((err: unknown) => {
   console.error('初期アセットのロードに失敗しました:', err);
   const loadingText = document.getElementById('loading-text');
   if (loadingText) {
-    loadingText.textContent =
-      'ロードに失敗しました: ' + (err instanceof Error ? err.message : String(err));
+    loadingText.textContent = 'ロードに失敗しました: ' + (err instanceof Error ? err.message : String(err));
   }
 });
 

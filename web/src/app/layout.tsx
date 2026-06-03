@@ -7,9 +7,7 @@ export const metadata: Metadata = {
   description: 'VRM キャラクターに VRMA アニメーションをランタイムで差し替えるビューア',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ja">
       <body>
