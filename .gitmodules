@@ -1,0 +1,6 @@
+[submodule "projects/ai-vtuber-voice-communication"]
+	path = projects/ai-vtuber-voice-communication
+	url = git@github.com:TakuHackathons/QiitaHackathon2024.git
+[submodule "projects/ai-vtuber-metamorphosis"]
+	path = projects/ai-vtuber-metamorphosis
+	url = git@github.com:TakuKobayashi/ai-vtuber-metamorphosis-sample.git
