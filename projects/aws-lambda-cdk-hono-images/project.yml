@@ -8,4 +8,4 @@ tags:
   - AWS Lambda
   - Hono
   - TypeScript
-description: TypeScript sample project using  CD CDK and Hono to verify image acquisition and HTTP API configuration onmbda。
+description: TypeScript sample project using AWS CDK and Hono to verify image acquisition and HTTP API configuration on Lambda.

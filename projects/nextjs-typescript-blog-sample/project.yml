@@ -8,4 +8,4 @@ tags:
   - TypeScript
   - Markdown
   - blog
-description: Next.js and TypeScript create Markdown-based blog sites and verify dynamic routing and Markdown conversion。
+description: A sample project that creates a Markdown-based blog site using Next.js and TypeScript, and verifies dynamic routing and Markdown conversion.

@@ -8,4 +8,4 @@ tags:
   - Serverless Framework
   - Fastify
   - TypeScript
-description: A sample project that uses the Notion API and the Notion SDK to verify how to handle Notion data from Verify and Serverless Framework。
+description: A sample project that uses the Notion API and the Notion SDK to verify how to handle Notion data from Fastify and Serverless Framework.

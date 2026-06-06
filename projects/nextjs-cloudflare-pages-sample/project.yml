@@ -8,4 +8,4 @@ tags:
   - Cloudflare Pages
   - TypeScript
   - deployment
-description: A sample project that verifies the procedure and configuration to deploy static sites created in Next.js to Cloud re Pages。
+description: A sample project that verifies the procedure and configuration to deploy static sites created in Next.js to Cloudflare Pages.

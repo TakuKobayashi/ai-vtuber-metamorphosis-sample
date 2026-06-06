@@ -8,4 +8,4 @@ tags:
   - Python
   - Docker
   - AWS Lambda
-description: A sample project that uses Python and Docker in Serverless Framework to verify the container execution environment for Serverda。
+description: A sample project that uses Python and Docker in Serverless Framework to verify the container execution environment for AWS Lambda.

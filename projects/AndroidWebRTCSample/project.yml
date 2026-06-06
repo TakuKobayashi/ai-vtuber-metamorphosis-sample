@@ -8,4 +8,4 @@ tags:
   - Kotlin
   - WebRTC
   - camera
-description: A sample project that検証s WebRTC camera video acquisition, SurfaceViewRenderer display, cameraカメラ, etc. in the Android app。
+description: A sample project that verifies WebRTC camera video acquisition, SurfaceViewRenderer display, camera switching, etc. in the Android app.

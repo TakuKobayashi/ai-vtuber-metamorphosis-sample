@@ -8,4 +8,4 @@ tags:
   - OpenCV
   - image-processing
   - uv
-description: Sample project to verify image processing and local execution environment using Python and OpenCV。
+description: A sample project to verify image processing and local execution environment using Python and OpenCV.

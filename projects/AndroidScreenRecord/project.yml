@@ -8,4 +8,4 @@ tags:
   - Kotlin
   - MediaProjection
   - screen-recording
-description: A sample project that uses Android MediaProjection and foreground services to verify the recording process of the terminal screen。
+description: A sample project that uses Android MediaProjection and foreground services to verify the recording process of the terminal screen.

@@ -8,4 +8,4 @@ tags:
   - Hono
   - D1
   - Prisma
-description: Sample project to verify API implementations Ho Hono, KV, D1 and Prisma on Cloud Workre Workers。
+description: Sample project to verify API implementations using Hono, KV, D1 and Prisma on Cloudflare Workers.

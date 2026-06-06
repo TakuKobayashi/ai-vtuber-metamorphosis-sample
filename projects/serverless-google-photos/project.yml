@@ -8,4 +8,4 @@ tags:
   - Google Photos API
   - Fastify
   - TypeScript
-description: TypeScript sample project that handles Google Photos API and googleapis on Serverless Framework to verify photo data collaboration。
+description: A sample project that handles Google Photos API and googleapis on Serverless Framework to verify photo data collaboration.

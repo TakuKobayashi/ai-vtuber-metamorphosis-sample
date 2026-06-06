@@ -8,4 +8,4 @@ tags:
   - Cloudflare Workers
   - Next.js
   - Firebase
-description: Cloudデモre Workers Assets and Next.js。
+description: A demo project that verifies browser notification delivery using Web Push API and Firebase Cloud Messaging with Cloudflare Workers Assets and Next.js.

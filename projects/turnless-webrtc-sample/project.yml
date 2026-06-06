@@ -8,4 +8,4 @@ tags:
   - WebRTC
   - RTCDataChannel
   - TypeScript
-description: Next.js sample project for WebRTC video chat and data channel communication with STUN only without TURN server。
+description: A sample project that tries WebRTC video chat and data channel communication using only STUN without TURN server in Next.js.

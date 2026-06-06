@@ -8,4 +8,4 @@ tags:
   - Serverless Framework
   - AWS Lambda
   - TypeScript
-description: A sample project that verifies the configuration of the ServerJS application on  Server da with Serverless Framework and serverless-express。
+description: A sample project that verifies the configuration of a NestJS application on AWS Lambda using Serverless Framework and serverless-express.

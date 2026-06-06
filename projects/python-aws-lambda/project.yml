@@ -8,4 +8,4 @@ tags:
   - AWS Lambda
   - Chalice
   - uv
-description: A sample project that builds applications for  Python da in Python and verifies development environments including Challice and dependency management。
+description: A sample project that builds applications for AWS Lambda in Python and verifies development environments including Chalice and dependency management.
