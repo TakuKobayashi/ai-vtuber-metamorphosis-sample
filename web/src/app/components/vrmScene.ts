@@ -4,7 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { VRMLoaderPlugin } from '@pixiv/three-vrm';
 import type { VRM } from '@pixiv/three-vrm';
-import { createVRMAnimationClip, VRMAnimationLoaderPlugin } from '@pixiv/three-vrm-animation';
+import {
+  createVRMAnimationClip,
+  VRMAnimationLoaderPlugin,
+  VRMLookAtQuaternionProxy,
+} from '@pixiv/three-vrm-animation';
 import type { AppBase } from 'playcanvas';
 import { EmoteController } from './emoteController/emoteController';
 import { LipSync } from './lipSync/lipSync';
@@ -26,6 +30,9 @@ export class VrmScene {
   private currentVrm: VRM | null = null;
   private currentAnimationMixer: THREE.AnimationMixer | null = null;
   private currentAnimationClipActions: THREE.AnimationAction[] = [];
+
+  // 最後に適用された VRMA バッファを保持（VRM 差し替え後の自動再生に使う）
+  private lastVrmaBuffer: ArrayBuffer | null = null;
 
   private lipSync: LipSync | null = null;
   public emoteController: EmoteController | null = null;
@@ -76,7 +83,8 @@ export class VrmScene {
 
     // 初期アニメーション
     const vrmaRes = await fetch(modelInfos.animations[0].path);
-    await this.updateVrmAnimationArrayBuffer(await vrmaRes.arrayBuffer());
+    const vrmaBuffer = await vrmaRes.arrayBuffer();
+    await this.updateVrmAnimationArrayBuffer(vrmaBuffer);
 
     // ランダムステージ
     const stageIndex = Math.floor(Math.random() * modelInfos.stages.length);
@@ -88,7 +96,7 @@ export class VrmScene {
     );
   }
 
-  /** アニメーション一覧を返す（UIのボタン生成に使う） */
+  /** アニメーション一覧を返す */
   async fetchAnimationList(): Promise<ModelsInfo['animations']> {
     const response = await fetch(this.modelsInfoUrl);
     const modelInfos: ModelsInfo = await response.json();
@@ -110,17 +118,33 @@ export class VrmScene {
     loader.register((parser) => new VRMLoaderPlugin(parser));
     const gltf = await loader.parseAsync(arrayBuffer, '');
     const vrm = gltf.userData.vrm as VRM;
+
+    // VRMLookAtQuaternionProxy を手動生成して警告を抑制する
+    // （createVRMAnimationClip が内部で必要とするため）
+    if (vrm.lookAt) {
+      const proxy = new VRMLookAtQuaternionProxy(vrm.lookAt);
+      proxy.name = 'VRMLookAtQuaternionProxy';
+      vrm.scene.add(proxy);
+    }
+
     this.threeScene?.add(vrm.scene);
     this.currentVrm = vrm;
     this.currentAnimationMixer = new THREE.AnimationMixer(vrm.scene);
     return vrm;
   }
 
-  /** VRM を差し替えて EmoteController も再生成する */
+  /**
+   * VRM を差し替えて EmoteController を再生成し、
+   * 直前に適用していた VRMA アニメーションを自動再生する
+   */
   async replaceVrmArrayBuffer(arrayBuffer: ArrayBuffer): Promise<VRM> {
     const vrm = await this.updateVrmArrayBuffer(arrayBuffer);
     if (this.threeCamera) {
       this.emoteController = new EmoteController(vrm, this.threeCamera);
+    }
+    // 前のアニメーションを自動再生
+    if (this.lastVrmaBuffer) {
+      await this.updateVrmAnimationArrayBuffer(this.lastVrmaBuffer);
     }
     return vrm;
   }
@@ -130,6 +154,11 @@ export class VrmScene {
     loader.register((parser) => new VRMLoaderPlugin(parser));
     const gltf = await loader.loadAsync(url);
     const vrm = gltf.userData.vrm as VRM;
+    if (vrm.lookAt) {
+      const proxy = new VRMLookAtQuaternionProxy(vrm.lookAt);
+      proxy.name = 'VRMLookAtQuaternionProxy';
+      vrm.scene.add(proxy);
+    }
     if (this.currentVrm && this.threeScene) {
       this.threeScene.remove(this.currentVrm.scene);
     }
@@ -147,10 +176,15 @@ export class VrmScene {
   }
 
   async updateVrmAnimationArrayBuffer(arrayBuffer: ArrayBuffer): Promise<GLTF> {
+    // 後で VRM 差し替え時に再生できるよう保持
+    this.lastVrmaBuffer = arrayBuffer;
+
     const loader = new GLTFLoader();
     loader.register((parser) => new VRMAnimationLoaderPlugin(parser));
     const gltf = await loader.parseAsync(arrayBuffer, '');
-    const vrmAnimations = gltf.userData.vrmAnimations as Parameters<typeof createVRMAnimationClip>[0][];
+    const vrmAnimations = gltf.userData.vrmAnimations as Parameters<
+      typeof createVRMAnimationClip
+    >[0][];
 
     if (this.currentVrm && this.currentAnimationMixer && vrmAnimations) {
       this.currentAnimationMixer.stopAllAction();
@@ -182,7 +216,8 @@ export class VrmScene {
     const h = wrapper.clientHeight;
 
     const threeCanvas = document.createElement('canvas');
-    threeCanvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;display:block;';
+    threeCanvas.style.cssText =
+      'position:absolute;top:0;left:0;width:100%;height:100%;display:block;';
     wrapper.appendChild(threeCanvas);
 
     const renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, antialias: true });
