@@ -32,16 +32,14 @@
 | [AndroidScreenRecord](./projects/AndroidScreenRecord/)                             | Android の MediaProjection とフォアグラウンドサービスを使い、端末画面の録画処理を検証するサンプルプロジェクト。                          | incubating |
 | [AndroidWebRTCSample](./projects/AndroidWebRTCSample/)                             | Android アプリで WebRTC のカメラ映像取得、SurfaceViewRenderer 表示、カメラ切り替えなどを検証するサンプルプロジェクト。                   | incubating |
 | [aws-lambda-cdk-hono-images](./projects/aws-lambda-cdk-hono-images/)               | AWS CDK と Hono を使い、Lambda 上で画像取得や HTTP API の構成を検証する TypeScript サンプルプロジェクト。                                | incubating |
-| [chat-app](./projects/chat-app/)                                                   | PartyKitを活用し、リアルタイム通信・WebSocket構成・無料運用可能性を学ぶためのマルチプラットフォーム対応チャットアプリサンプル。          | incubating |
 | [cloudflare-hono-sample](./projects/cloudflare-hono-sample/)                       | Cloudflare Workers 上で Hono、KV、D1、Prisma を組み合わせた API 実装を検証するサンプルプロジェクト。                                     | incubating |
-| [gather-app](./projects/gather-app/)                                               | Gather風バーチャルワークスペースサービス。PartyKitとLiveKitを用いたWebSocket / WebRTC構成やオンライン空間設計を検証。                    | incubating |
 | [gatsby-cloud-functions](./projects/gatsby-cloud-functions/)                       | Gatsby Cloud Functions の使い方を調査するため、Gatsby ブログスターターをベースに機能検証を行うサンプルプロジェクト。                     | incubating |
 | [github-api-file-upload](./projects/github-api-file-upload/)                       | GitHub API と Octokit を使い、リポジトリ内ファイルの作成・更新・アップロード処理を検証するサンプルプロジェクト。                         | incubating |
 | [github-webhook-api-workflows](./projects/github-webhook-api-workflows/)           | GitHub API で Actions のワークフロー一覧、実行履歴、dispatch 実行などを扱う API を検証する Serverless サンプルプロジェクト。             | incubating |
 | [GodotSample](./projects/GodotSample/)                                             | Godot 4 の基本プロジェクト構成や 3D シーン作成を試すための小規模な検証サンプル。                                                         | incubating |
 | [japanese-address-research](./projects/japanese-address-research/)                 | 日本の住所データを使い、住所の正規化や検索・変換処理の検証を行う調査用プロジェクト。                                                     | incubating |
 | [jets-examples](./projects/jets-examples/)                                         | Ruby の Jets フレームワークを使ったサーバーレスアプリケーション構成を調査するためのサンプルプロジェクト。                                | incubating |
-| [livekit-gather-app-sample](./projects/livekit-gather-app-sample/)                 |                                                                                                                                          | incubating |
+| [livekit-gather-app-sample](./projects/livekit-gather-app-sample/)                 | Gather風バーチャルワークスペースサービス。PartyKitとLiveKitを用いたWebSocket / WebRTC構成やオンライン空間設計を検証。                    | incubating |
 | [mermaid-doc-sample](./projects/mermaid-doc-sample/)                               | Mermaid 記法で ER 図などの技術ドキュメント用ダイアグラムを作成・表示できるか検証するサンプルプロジェクト。                               | incubating |
 | [MLKitSample](./projects/MLKitSample/)                                             | Android の CameraX と Google ML Kit を使い、顔検出やバーコード読み取りをカメラ映像から行う検証サンプル。                                 | incubating |
 | [mmd-parser-sample](./projects/mmd-parser-sample/)                                 | mmd-parser を使い、MMD の PMX モデルファイルや VMD モーションファイルを Node.js/Serverless 環境で読み込む検証プロジェクト。              | incubating |
@@ -53,7 +51,7 @@
 | [nextjs-typescript-blog-sample](./projects/nextjs-typescript-blog-sample/)         | Next.js と TypeScript で Markdown ベースのブログサイトを作成し、動的ルーティングや Markdown 変換を検証するサンプルプロジェクト。         | incubating |
 | [nextjs-webrtc-sample](./projects/nextjs-webrtc-sample/)                           | Next.js 上で WebRTC を使った通信機能を試し、ブラウザ間のリアルタイム通信を検証するサンプルプロジェクト。                                 | incubating |
 | [notion-api-examples](./projects/notion-api-examples/)                             | Notion API と Notion SDK を使い、Fastify と Serverless Framework から Notion データを扱う方法を検証するサンプルプロジェクト。            | incubating |
-| [partykit-websocket-chat-samples](./projects/partykit-websocket-chat-samples/)     |                                                                                                                                          | incubating |
+| [partykit-websocket-chat-samples](./projects/partykit-websocket-chat-samples/)     | PartyKitを活用し、リアルタイム通信・WebSocket構成・無料運用可能性を学ぶためのマルチプラットフォーム対応チャットアプリサンプル。          | incubating |
 | [PushNotification](./projects/PushNotification/)                                   | Android のプッシュ通知やネイティブ連携の検証を目的とした、Kotlin と C++ ネイティブコードを含む Android サンプルプロジェクト。            | incubating |
 | [python-aws-lambda](./projects/python-aws-lambda/)                                 | Python で AWS Lambda 向けのアプリケーションを構築し、Chalice や依存関係管理を含む開発環境を検証するサンプルプロジェクト。                | incubating |
 | [python-opencv](./projects/python-opencv/)                                         | Python と OpenCV を使った画像処理やローカル実行環境を検証するためのサンプルプロジェクト。                                                | incubating |
